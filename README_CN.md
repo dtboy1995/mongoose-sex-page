@@ -13,7 +13,8 @@
 # 用法
 ```javascript
 // ...
-var Foo = mongoose.model('Foo', FooSchema);
+var Foo = mongoose.model('Foo', FooSchema)
+var Pagnation = require('mongoose-sex-page')
 /*
   Promise形式
 */

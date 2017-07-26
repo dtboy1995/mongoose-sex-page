@@ -1,3 +1,5 @@
+# ﻿![mongoose-sex-page](static/logo.gif)
+
 # mongoose-sex-page [![Build Status](https://travis-ci.org/dtboy1995/mongoose-sex-page.svg?branch=master)](https://travis-ci.org/dtboy1995/mongoose-sex-page)
 A widget for mongoose paging
 
@@ -53,5 +55,15 @@ Pagnation(Foo)
 
   })
 ```
+
+# api
+- page(number)  current page
+- size(number)  quantity per page
+- display(number)  the page number to display
+- find select sort populate  same as mongoose
+- exec(fn)
+  - if fn is function then function(err, result) called
+  - if fn is null then return a Promise
+
 # test
 > npm run test

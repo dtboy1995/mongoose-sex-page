@@ -1,3 +1,5 @@
+# ﻿![mongoose-sex-page](static/logo.gif)
+
 # mongoose-sex-page [![Build Status](https://travis-ci.org/dtboy1995/mongoose-sex-page.svg?branch=master)](https://travis-ci.org/dtboy1995/mongoose-sex-page)
 一个mongoose分页小工具
 
@@ -53,5 +55,14 @@ Pagnation(Foo)
 
   })
 ```
+# api
+- page(number)  设置当前页
+- size(number)  设置每页的数量
+- display(number)  设置要显示在前端的页码数
+- find select sort populate  这几个方法的使用和mongoose相应的方法一样
+- exec(fn)
+  - 如果fn是一个函数 那么 function(err, result) 会被调用
+  - 如果不传fn 那么直接返回一个Promise对象 
+
 # 测试
 > npm run test

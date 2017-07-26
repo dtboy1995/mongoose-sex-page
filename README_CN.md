@@ -62,7 +62,7 @@ Pagnation(Foo)
 - find select sort populate  这几个方法的使用和mongoose相应的方法一样
 - exec(fn)
   - 如果fn是一个函数 那么 function(err, result) 会被调用
-  - 如果不传fn 那么直接返回一个Promise对象 
+  - 如果不传fn 那么直接返回一个Promise对象
 
 # 测试
-> npm run test
+> npm run _test

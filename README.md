@@ -66,4 +66,4 @@ Pagnation(Foo)
   - if fn is null then return a Promise
 
 # test
-> npm run test
+> npm run _test

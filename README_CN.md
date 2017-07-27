@@ -65,4 +65,4 @@ Pagnation(Foo)
   - 如果不传fn 那么直接返回一个Promise对象
 
 # 测试
-> npm run _test
+> npm test

@@ -1,11 +1,10 @@
 {
   "name": "mongoose-sex-page",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A widget for mongoose paging",
   "main": "index.js",
   "scripts": {
-    "_test": "node test/test.js",
-    "test": "echo passed",
+    "test": "node test/test.js",
     "build": "coffee --output lib/ -c src/pagnation.coffee"
   },
   "repository": {

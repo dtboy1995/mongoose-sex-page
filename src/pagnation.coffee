@@ -56,19 +56,12 @@ class Pagnation
         .skip skip
         .limit @count
 
-      if @selection?
-        promiseRecords = promiseRecords.select @selection
-
-      if @sorting?
-        promiseRecords = promiseRecords.sort @sorting
-
-      if @population
-        promiseRecords = promiseRecords.populate @population
-
-      promiseRecords = promiseRecords.exec()
+      if @selection? then promiseRecords = promiseRecords.select @selection
+      if @sorting? then promiseRecords = promiseRecords.sort @sorting
+      if @population then promiseRecords = promiseRecords.populate @population
 
       Promise
-        .all [promiseCount, promiseRecords]
+        .all [ promiseCount, promiseRecords.exec() ]
         .bind @
         .then ([total, records]) ->
             final =

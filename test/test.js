@@ -88,18 +88,22 @@ mongoose.connect('mongodb://localhost:27017/pagnation',{ useMongoClient: true}).
         })
     })
     .catch(function (err) {
-      console.error('test not passed due to:' + err.stack);
+      throw err;
     })
     .finally(function () {
-      console.log('----------------------');
-      return Test.remove().then(function () {
-        console.log('clear tests');
-        return Population.remove()
-      }).then(function () {
-        console.log('clear populations');
-      })
-    })
-
+      return Test
+        .remove()
+        .then(function () {
+          console.log('clear tests');
+          return Population.remove();
+        })
+        .then(function () {
+          console.log('clear populations');
+        })
+        .then(function () {
+          return db.close();
+        });
+    });
 }).catch(function (err) {
-  console.log('disconneted.');
+  throw err;
 })

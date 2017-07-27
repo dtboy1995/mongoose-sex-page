@@ -54,6 +54,23 @@ Pagnation(Foo)
   .exec(function (err, result) {
 
   })
+/*
+  extend()
+  if you use the mongoose plugin, Model will have some other methods
+  for example, after using mongoose-deep-populate, the Model.deepPopulate method exists
+*/
+var deepPopulate = require('mongoose-deep-populate')(mongoose)
+FooSchema.plugin(deepPopulate)
+var Foo = mongoose.model('Foo', FooSchema)
+
+Pagnation(Foo)
+  .find()
+  .page(1)
+  .size(10)
+  .extend('deepPopulate', 'population')
+  .then(function (result) {
+
+  })
 ```
 
 # api
@@ -64,6 +81,8 @@ Pagnation(Foo)
 - exec(fn)
   - if fn is function then function(err, result) called
   - if fn is null then return a Promise
-
+- extend(name, params)
+  - name a method name for Model
+  - params Arguments to pass to this method
 # test
 > npm test

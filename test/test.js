@@ -3,6 +3,8 @@ var Pagnation = require('../index')
 var Promise = require('bluebird')
 mongoose.Promise = Promise
 var assert = require('assert')
+// test extend method
+var deepPopulate = require('mongoose-deep-populate')(mongoose)
 
 var PopulationSchema = new mongoose.Schema({
   name: String
@@ -18,6 +20,8 @@ var TestSchema = new mongoose.Schema({
     ref: 'Population'
   }
 })
+
+TestSchema.plugin(deepPopulate)
 
 var Test = mongoose.model('Test', TestSchema)
 
@@ -45,19 +49,20 @@ mongoose.connect('mongodb://localhost:27017/pagnation',{ useMongoClient: true}).
         return Test.create(tests)
     })
     .then(function (docs) {
-      console.log('data loaded.');
+      console.log('data incerted.');
       console.log('----------------------');
       return Pagnation(Test)
         .find()
-        .select('age')
+        .select('age population')
         .page(1)
         .size(10)
         .display(6)
-        .sort({age: -1})
-        .populate()
+        .sort({age: 1})
+        .extend('deepPopulate', 'population')
         .exec()
     })
     .then(function (result) {
+      assert.equal(typeof result.records[0].population.name, 'string')
       assert.equal(result.page, 1)
       assert.equal(result.pages, 10)
       assert.equal(result.total, 100)
@@ -91,6 +96,7 @@ mongoose.connect('mongodb://localhost:27017/pagnation',{ useMongoClient: true}).
       throw err;
     })
     .finally(function () {
+      console.log('----------------------');
       return Test
         .remove()
         .then(function () {

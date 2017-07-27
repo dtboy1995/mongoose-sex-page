@@ -1,6 +1,6 @@
 {
   "name": "mongoose-sex-page",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A widget for mongoose paging",
   "main": "index.js",
   "scripts": {
@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "coffee-script": "^1.12.7",
-    "mongoose": "^4.11.4"
+    "mongoose": "^4.11.4",
+    "mongoose-deep-populate": "^3.0.0"
   }
 }

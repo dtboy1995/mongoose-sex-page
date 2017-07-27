@@ -54,6 +54,23 @@ Pagnation(Foo)
   .exec(function (err, result) {
 
   })
+/*
+  extend 方法
+  如果你使用了mongoose的插件那么Model会有一些其他的方法
+  比如在用了mongoose-deep-populate后，Model.deepPopulate这个方法就有了
+*/
+var deepPopulate = require('mongoose-deep-populate')(mongoose)
+FooSchema.plugin(deepPopulate)
+var Foo = mongoose.model('Foo', FooSchema)
+
+Pagnation(Foo)
+  .find()
+  .page(1)
+  .size(10)
+  .extend('deepPopulate', 'population')
+  .then(function (result) {
+
+  })
 ```
 # api
 - page(number)  设置当前页
@@ -63,6 +80,9 @@ Pagnation(Foo)
 - exec(fn)
   - 如果fn是一个函数 那么 function(err, result) 会被调用
   - 如果不传fn 那么直接返回一个Promise对象
+- extend(name, params)
+  - name Model的某个方法名
+  - params 要传给该方法的参数
 
 # 测试
 > npm test

@@ -31,7 +31,7 @@ class Pagnation
       @index = 1
       @count = 20
       @friend = 0
-      @condition = @selection = @population = @sorting = null
+      @extends = @condition = @selection = @population = @sorting = null
 
     find: (@condition) -> @
     select: (@selection) -> @
@@ -40,6 +40,12 @@ class Pagnation
     page: (@index) -> @
     size: (@count) -> @
     display: (@friend) -> @
+    extend: (name, params) ->
+      unless @extends? then @extends = []
+      @extends.push
+        name: name
+        params: params
+      return @
 
     exec: (fn)->
 
@@ -55,6 +61,11 @@ class Pagnation
         .find @condition
         .skip skip
         .limit @count
+
+      if @extends?
+        for extend in @extends
+          if @model[extend.name]?
+            promiseRecords = promiseRecords[extend.name](extend.params)
 
       if @selection? then promiseRecords = promiseRecords.select @selection
       if @sorting? then promiseRecords = promiseRecords.sort @sorting

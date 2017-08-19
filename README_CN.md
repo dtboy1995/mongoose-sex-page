@@ -4,7 +4,7 @@
 一个mongoose分页小工具
 
 ## Translations
-[中文](README_CN.md)
+[English](README.md)
 
 # 什么情况下使用
 - 使用mongoose做分页查询

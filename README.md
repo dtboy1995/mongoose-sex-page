@@ -71,18 +71,19 @@ Pagnation(Foo)
   .page(1)
   .size(10)
   .extend('deepPopulate', ['some_field'], { populate: { select: 'some_field'}})
+  .exec()
   .then(function (result) {
 
   });
 ```
 
 # result
-- result.page current page
-- result.pages page count
-- result.total total records number
-- result.records current page records
-- result.size quantity per page
-- result.display the page number to display
+- [page] current page
+- [pages] page count
+- [total] total records number
+- [records] current page records
+- [size] quantity per page
+- [display] the page number to display
 
 **sample**
 ``` json

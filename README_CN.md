@@ -71,18 +71,19 @@ Pagnation(Foo)
   .page(1)
   .size(10)
   .extend('deepPopulate', ['some_field'], { populate: { select: 'some_field'}})
+  .exec()
   .then(function (result) {
 
   });
 ```
 
 # 返回值
-- result.page 当前页
-- result.pages 总页数
-- result.total 总数据数
-- result.records 当前页的数据
-- result.size 每页多少条
-- result.display 显示的页码
+- [page] 当前页
+- [pages] 总页数
+- [total] 总数据数
+- [records] 当前页的数据
+- [size] 每页多少条
+- [display] 显示的页码
 
 **例子**
 ``` json
@@ -111,7 +112,7 @@ Pagnation(Foo)
 }
 ```
 
-# API
+# 接口
 - page(number)  设置当前页
 - size(number)  设置每页的数量
 - display(number)  设置要显示在前端的页码数

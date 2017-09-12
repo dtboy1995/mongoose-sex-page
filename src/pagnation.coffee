@@ -1,5 +1,6 @@
 Promise = require 'bluebird'
 
+# get display pages
 friendly = (total, display, current) ->
   left = 1
   right = total
@@ -25,52 +26,65 @@ friendly = (total, display, current) ->
   return pages
 
 class Pagnation
-
-    constructor: (model) ->
-      @model = @__model__ = model
-      @index = 1
-      @count = 20
-      @friend = 0
-      @extends = @condition = @selection = @population = @sorting = null
-
+    # inject model
+    constructor: (@model) ->
+    # wrap find
     find: (@condition) -> @
+    # wrap select
     select: (@selection) -> @
-    populate: (@population) -> @
+    # wrap populate
+    populate: (population...) ->
+      unless @populations? then @populations = []
+      @populations.push population
+      return @
+    # wrap sort
     sort: (@sorting) -> @
+    # define page
     page: (@index) -> @
+    # define size
     size: (@count) -> @
+    # define display
     display: (@friend) -> @
-    extend: (name, params) ->
+    # define extend
+    extend: (name, params...) ->
       unless @extends? then @extends = []
       @extends.push
         name: name
         params: params
       return @
-
+    # execute
     exec: (fn)->
-
+      # default index count friend
+      unless @index? then @index = 1
+      unless @count? then @count = 20
+      unless @friend? then @friend = 0
+      # compute skip
       skip = (@index - 1) * @count
+      # default condition
       @condition ?= {}
-
-      promiseCount = @__model__
+      # prepare count-Promise
+      promiseCount = @model
         .where @condition
         .count()
         .exec()
-
+      # prepare records-Promise
       promiseRecords = @model
         .find @condition
         .skip skip
         .limit @count
-
+      # inject extends
       if @extends?
         for extend in @extends
-          if @model[extend.name]?
-            promiseRecords = promiseRecords[extend.name](extend.params)
-
+          if @model[extend.name]? then promiseRecords = promiseRecords[extend.name] extend.params...
+      # inject select
       if @selection? then promiseRecords = promiseRecords.select @selection
+      # inject sort
       if @sorting? then promiseRecords = promiseRecords.sort @sorting
-      if @population then promiseRecords = promiseRecords.populate @population
-
+      # inject populations
+      if @populations?
+        for population in @populations
+          promiseRecords = promiseRecords.populate population...
+      # execute
       Promise
         .all [ promiseCount, promiseRecords.exec() ]
         .bind @
@@ -81,6 +95,7 @@ class Pagnation
               total: total
               records: records
               pages: Math.ceil total / @count
+            # compute display pages
             unless @friend is 0 then final.display = friendly final.pages, @friend, @index
             if fn? and typeof fn is 'function'
               fn null, final
@@ -91,6 +106,5 @@ class Pagnation
             fn err, null
           else
             throw err
-
 
 module.exports = Pagnation

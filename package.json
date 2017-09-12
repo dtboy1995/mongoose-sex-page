@@ -4,8 +4,8 @@
   "description": "A widget for mongoose paging",
   "main": "index.js",
   "scripts": {
-    "test": "node test/test.js",
-    "build": "coffee --output lib/ -c src/pagnation.coffee"
+    "test": "npm run build && node test/test.js",
+    "build": "coffee --output lib/ -c src/pagnation.coffee && coffee --output test/ -c src/test.coffee"
   },
   "repository": {
     "type": "git",

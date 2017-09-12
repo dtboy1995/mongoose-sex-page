@@ -15,62 +15,100 @@ A widget for mongoose paging
 # usage
 ```javascript
 // ...
-var Foo = mongoose.model('Foo', FooSchema)
-var Pagnation = require('mongoose-sex-page')
+var User = mongoose.model('User', UserSchema);
+var Pagnation = require('mongoose-sex-page');
 /*
   Promise
 */
-Pagnation(Foo)
-  .find()
-  .select('age')
-  .page(1) // current page
-  .size(10) // quantity per page
-  .display(6) // the page number to display
-  .sort({age: -1})
-  .populate('foo')
-  .exec()
-  .then(function (result) {
-    // result.page current page
-    // result.pages page count
-    // result.total total record number
-    // result.records current page records
-    // result.size quantity per page
-    // result.display the page number to display
-  })
-  .catch(function (err) {
-    console.log(err)
-  })
+server.get('/users',function (req, res, next) {
+  var page, size;
+    page = req.query.page;
+    size = req.query.size;
+  Pagnation(User)
+    .find()
+    .select('age')
+    .page(page)
+    .size(size)
+    .display(8)
+    .sort({age: -1})
+    .populate('mother', 'age')
+    .populate('father', 'name')
+    .exec()
+    .then(function (result) {
+      res.send(result);
+    });
+});
 /*
   callback
 */
-Pagnation(Foo)
-  .find()
-  .select('age')
-  .page(1)
-  .size(10)
-  .display(6)
-  .sort({age: -1})
-  .populate('foo')
-  .exec(function (err, result) {
-
-  })
+server.get('/users',function (req, res, next) {
+  var page, size;
+    page = req.query.page;
+    size = req.query.size;
+  Pagnation(User)
+    .find()
+    .select('age')
+    .page(page)
+    .size(size)
+    .display(8)
+    .sort({age: -1})
+    .populate('mother', 'age')
+    .populate('father', 'name')
+    .exec(function (err, result) {
+      res.send(result);
+    });
+});
 /*
   extend()
   if you use the mongoose plugin, Model will have some other methods
   for example, after using mongoose-deep-populate, the Model.deepPopulate method exists
 */
-var deepPopulate = require('mongoose-deep-populate')(mongoose)
-FooSchema.plugin(deepPopulate)
-var Foo = mongoose.model('Foo', FooSchema)
-
+var deepPopulate = require('mongoose-deep-populate')(mongoose);
+UserSchema.plugin(deepPopulate);
+var User = mongoose.model('User', UserSchema);
 Pagnation(Foo)
   .find()
   .page(1)
   .size(10)
-  .extend('deepPopulate', 'population')
+  .extend('deepPopulate', ['some_field'], { populate: { select: 'some_field'}})
   .then(function (result) {
 
-  })
+  });
+```
+
+# result
+- result.page current page
+- result.pages page count
+- result.total total records number
+- result.records current page records
+- result.size quantity per page
+- result.display the page number to display
+
+**sample**
+``` json
+{
+  "page": 1,
+  "size": 5,
+  "total": 100,
+  "records": [{
+    "name": "Test1",
+    "age": 1
+  }, {
+    "name": "Test2",
+    "age": 2
+  }, {
+    "name": "Test3",
+    "age": 3
+  }, {
+    "name": "Test4",
+    "age": 4
+  }, {
+    "name": "Test5",
+    "age": 5
+  }],
+  "pages": 20,
+  "display": [1, 2, 3, 4, 5, 6]
+}
 ```
 
 # api
@@ -81,8 +119,9 @@ Pagnation(Foo)
 - exec(fn)
   - if fn is function then function(err, result) called
   - if fn is null then return a Promise
-- extend(name, params)
+- extend(name, params...)
   - name a method name for Model
-  - params Arguments to pass to this method
+  - params Arguments to pass to this method, you can pass more than one parameter
+
 # test
 > npm test

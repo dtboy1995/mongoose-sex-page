@@ -59,7 +59,7 @@ class Pagnation
       unless @count? then @count = 20
       unless @friend? then @friend = 0
       # compute skip
-      skip = (@index - 1) * @count
+      skip = (+@index - 1) * +@count
       # default condition
       @condition ?= {}
       # prepare count-Promise
@@ -71,7 +71,7 @@ class Pagnation
       promiseRecords = @model
         .find @condition
         .skip skip
-        .limit @count
+        .limit +@count
       # inject extends
       if @extends?
         for extend in @extends
@@ -90,13 +90,13 @@ class Pagnation
         .bind @
         .then ([total, records]) ->
             final =
-              page: @index
-              size: @count
+              page: +@index
+              size: +@count
               total: total
               records: records
-              pages: Math.ceil total / @count
+              pages: Math.ceil total / +@count
             # compute display pages
-            unless @friend is 0 then final.display = friendly final.pages, @friend, @index
+            unless +@friend is 0 then final.display = friendly final.pages, +@friend, +@index
             if fn? and typeof fn is 'function'
               fn null, final
             else

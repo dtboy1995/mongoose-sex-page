@@ -15,64 +15,103 @@
 # 用法
 ```javascript
 // ...
-var Foo = mongoose.model('Foo', FooSchema)
-var Pagnation = require('mongoose-sex-page')
+var User = mongoose.model('User', UserSchema);
+var Pagnation = require('mongoose-sex-page');
 /*
   Promise形式
 */
-Pagnation(Foo)
-  .find()
-  .select('age')
-  .page(1) // 当前页数
-  .size(10) // 每页几条
-  .display(6) // 要显示的页码总数
-  .sort({age: -1})
-  .populate('foo')
-  .exec()
-  .then(function (result) {
-    // result.page 当前页数
-    // result.pages 总页数
-    // result.total 总记录数
-    // result.records 当前页的记录
-    // result.size 每页几条
-    // result.display 应该显示的页码数组 比如总页数有1000页的时候 我们只显示10页的情况下页码的下标
-  })
-  .catch(function (err) {
-    console.log(err)
-  })
+server.get('/users',function (req, res, next) {
+  var page, size;
+    page = req.query.page;
+    size = req.query.size;
+  Pagnation(User)
+    .find()
+    .select('age')
+    .page(page)
+    .size(size)
+    .display(8)
+    .sort({age: -1})
+    .populate('mother', 'age')
+    .populate('father', 'name')
+    .exec()
+    .then(function (result) {
+      res.send(result);
+    });
+});
 /*
   回调函数形式
 */
-Pagnation(Foo)
-  .find()
-  .select('age')
-  .page(1)
-  .size(10)
-  .display(6)
-  .sort({age: -1})
-  .populate('foo')
-  .exec(function (err, result) {
-
-  })
+server.get('/users',function (req, res, next) {
+  var page, size;
+    page = req.query.page;
+    size = req.query.size;
+  Pagnation(User)
+    .find()
+    .select('age')
+    .page(page)
+    .size(size)
+    .display(8)
+    .sort({age: -1})
+    .populate('mother', 'age')
+    .populate('father', 'name')
+    .exec(function (err, result) {
+      res.send(result);
+    });
+});
 /*
   extend 方法
   如果你使用了mongoose的插件那么Model会有一些其他的方法
   比如在用了mongoose-deep-populate后，Model.deepPopulate这个方法就有了
 */
-var deepPopulate = require('mongoose-deep-populate')(mongoose)
-FooSchema.plugin(deepPopulate)
-var Foo = mongoose.model('Foo', FooSchema)
-
+var deepPopulate = require('mongoose-deep-populate')(mongoose);
+UserSchema.plugin(deepPopulate);
+var User = mongoose.model('User', UserSchema);
 Pagnation(Foo)
   .find()
   .page(1)
   .size(10)
-  .extend('deepPopulate', 'population')
+  .extend('deepPopulate', ['some_field'], { populate: { select: 'some_field'}})
   .then(function (result) {
 
-  })
+  });
 ```
-# api
+
+# 返回值
+- result.page 当前页
+- result.pages 总页数
+- result.total 总数据数
+- result.records 当前页的数据
+- result.size 每页多少条
+- result.display 显示的页码
+
+**例子**
+``` json
+{
+  "page": 1,
+  "size": 5,
+  "total": 100,
+  "records": [{
+    "name": "Test1",
+    "age": 1
+  }, {
+    "name": "Test2",
+    "age": 2
+  }, {
+    "name": "Test3",
+    "age": 3
+  }, {
+    "name": "Test4",
+    "age": 4
+  }, {
+    "name": "Test5",
+    "age": 5
+  }],
+  "pages": 20,
+  "display": [1, 2, 3, 4, 5, 6]
+}
+```
+
+# API
 - page(number)  设置当前页
 - size(number)  设置每页的数量
 - display(number)  设置要显示在前端的页码数
@@ -80,9 +119,9 @@ Pagnation(Foo)
 - exec(fn)
   - 如果fn是一个函数 那么 function(err, result) 会被调用
   - 如果不传fn 那么直接返回一个Promise对象
-- extend(name, params)
+- extend(name, params...)
   - name Model的某个方法名
-  - params 要传给该方法的参数
+  - params 要传给该方法的参数,可以传入多个参数
 
 # 测试
 > npm test

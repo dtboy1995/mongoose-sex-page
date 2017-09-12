@@ -116,6 +116,10 @@
       }).call(this);
       return Test.create(tests);
     }).then(function() {
+      return Pagnation(Test).find().select('-_id -__v -a -c').page(1).size(5).display(6).exec().then(function(result) {
+        return console.log(JSON.stringify(result));
+      });
+    }).then(function() {
       return TEST_CASES.extend().exec().then(function(arg) {
         var page, pages, records, size, total;
         page = arg.page, size = arg.size, total = arg.total, records = arg.records, pages = arg.pages;

@@ -78,7 +78,7 @@
   };
 
   logger = function(m) {
-    return console.log("mongoose-sex-page:" + m);
+    return console.log("[mongoose-sex-page]: " + m);
   };
 
   mongoose.connect('mongodb://localhost/pagnation', {

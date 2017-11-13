@@ -61,7 +61,8 @@
   TEST_CASES = {
     config: function() {
       return P().config({
-        size: 8
+        size: 8,
+        display: 3
       });
     },
     simple: function() {
@@ -70,7 +71,7 @@
     inject: function() {
       var o;
       o = {
-        page: 2,
+        page: 5,
         size: 10
       };
       return P(Test).inject(o).exec();
@@ -196,6 +197,12 @@
       return TEST_CASES.simple().then(function(results) {
         assert.equal(results.length === 8, true);
         return assert.equal(results.length > 0, true);
+      });
+    }).then(function() {
+      return TEST_CASES.inject().then(function(result) {
+        assert.equal(result.records.length === 10, true);
+        assert.equal(result.page === 5, true);
+        return assert.equal(result.display.length === 3, true);
       });
     }).then(function() {
       return logger('tests passed');

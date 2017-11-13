@@ -164,5 +164,23 @@ Pagnation(User)
   - name a method name for Model
   - params Arguments to pass to this method, you can pass more than one parameter
 
+# best practice
+```javascript
+// if your client's query parameter is pageSize=20&pageIndex=1 like this, and the number of pages per business is fixed to 20
+// configure only once
+Pagnation().config({
+  page_name: 'pageIndex',
+  size_name: 'pageSize',
+  size: 20
+})
+// sample
+Pagnation(User)
+  .inject(req.query)
+  .exec()
+  .then(function () {
+
+  })
+```
+
 # test
 > npm test

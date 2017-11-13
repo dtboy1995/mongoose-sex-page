@@ -164,5 +164,23 @@ Pagnation(User)
   - name Model的某个方法名
   - params 要传给该方法的参数,可以传入多个参数
 
+# 最佳实践
+```javascript
+// 如果你的客户端的query参数是pageSize=20&pageIndex=1这样子，并且该业务每页数量固定为20，size如果配置了query中可以不传pageSize
+// 仅配置一次
+Pagnation().config({
+  page_name: 'pageIndex',
+  size_name: 'pageSize',
+  size: 20
+})
+// 之后调用分页如下
+Pagnation(User)
+  .inject(req.query)
+  .exec()
+  .then(function () {
+
+  })
+```
+
 # 测试
 > npm test

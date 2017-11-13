@@ -1,6 +1,5 @@
 Promise = require 'bluebird'
 
-# get display pages
 friendly = (total, display, current) ->
   left = 1
   right = total
@@ -26,85 +25,116 @@ friendly = (total, display, current) ->
   return pages
 
 class Pagnation
-    # inject model
+
+    __size__: 20
+    __display__: 0
+    __size_name__: 'size'
+    __page_name__: 'page'
+    __light__: false
+
+    config: (conf) ->
+      Pagnation.__size__ = conf.size or 20
+      Pagnation.__display__ = conf.display or 0
+      Pagnation.__size_name__ = conf.size_name or 'size'
+      Pagnation.__page_name__ = conf.page_name or 'page'
+      Pagnation.__light__ = conf.light or false
+      return
+
     constructor: (@model) ->
-    # wrap find
+
     find: (@condition) -> @
-    # wrap select
+
     select: (@selection) -> @
-    # wrap populate
+
     populate: (population...) ->
-      unless @populations? then @populations = []
+      @populations ?= []
       @populations.push population
-      return @
-    # wrap sort
+      @
+
     sort: (@sorting) -> @
-    # define page
+
     page: (@index) -> @
-    # define size
+
     size: (@count) -> @
-    # define display
+
     display: (@friend) -> @
-    # define extend
+
+    simple: (@light) -> @
+
     extend: (name, params...) ->
-      unless @extends? then @extends = []
+      @extends?= []
       @extends.push
         name: name
         params: params
-      return @
-    # execute
+      @
+
+    inject: (o) ->
+      @index = o[Pagnation.__page_name__]
+      @count = o[Pagnation.__size_name__]
+      @
+
     exec: (fn)->
-      # default index count friend
-      unless @index? then @index = 1
-      unless @count? then @count = 20
-      unless @friend? then @friend = 0
-      # compute skip
-      skip = (+@index - 1) * +@count
-      # default condition
+
+      @index ?= 1
+      @count ?= Pagnation.__size__
+      @friend ?= Pagnation.__display__
+      @light ?= Pagnation.__light__
       @condition ?= {}
-      # prepare count-Promise
+      skip = (+@index - 1) * +@count
       promiseCount = @model
         .where @condition
         .count()
         .exec()
-      # prepare records-Promise
       promiseRecords = @model
         .find @condition
         .skip skip
         .limit +@count
-      # inject extends
+
       if @extends?
         for extend in @extends
           if @model[extend.name]? then promiseRecords = promiseRecords[extend.name] extend.params...
-      # inject select
+
       if @selection? then promiseRecords = promiseRecords.select @selection
-      # inject sort
+
       if @sorting? then promiseRecords = promiseRecords.sort @sorting
-      # inject populations
+
       if @populations?
         for population in @populations
           promiseRecords = promiseRecords.populate population...
-      # execute
-      Promise
-        .all [ promiseCount, promiseRecords.exec() ]
-        .bind @
-        .then ([total, records]) ->
-            final =
-              page: +@index
-              size: +@count
-              total: total
-              records: records
-              pages: Math.ceil total / +@count
-            # compute display pages
-            unless +@friend is 0 then final.display = friendly final.pages, +@friend, +@index
+
+      unless @light
+        Promise
+          .all [ promiseCount, promiseRecords.exec() ]
+          .bind @
+          .then ([total, records]) ->
+              final =
+                page: +@index
+                size: +@count
+                total: total
+                records: records
+                pages: Math.ceil total / +@count
+
+              unless +@friend is 0 then final.display = friendly final.pages, +@friend, +@index
+              if fn? and typeof fn is 'function'
+                fn null, final
+              else
+                final
+          .catch (err) ->
             if fn? and typeof fn is 'function'
-              fn null, final
+              fn err, null
             else
-              final
-        .catch (err) ->
-          if fn? and typeof fn is 'function'
-            fn err, null
-          else
-            throw err
+              throw err
+      else
+        promiseRecords
+          .then (records) ->
+            if fn? and typeof fn is 'function'
+              fn null, records
+            else
+              records
+          .catch (err) ->
+            if fn? and typeof fn is 'function'
+              fn err, null
+            else
+              throw err
 
 module.exports = Pagnation

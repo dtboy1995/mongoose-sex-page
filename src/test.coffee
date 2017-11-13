@@ -2,7 +2,7 @@ assert        = require 'assert'
 Promise       = require 'bluebird'
 mongoose      = require 'mongoose'
 deepPopulate  = require('mongoose-deep-populate')(mongoose)
-Pagnation     = require '../index'
+P             = require '../index'
 { ObjectId }  = mongoose.Schema.Types
 
 mongoose.Promise = Promise
@@ -33,8 +33,25 @@ Test = mongoose.model 'Test', TestSchema
 
 TEST_CASES =
 
+  config: ->
+    P()
+      .config size: 8, display: 3
+
+  simple: ->
+    P Test
+      .simple true
+      .exec()
+
+  inject: ->
+    o = # like req.query
+      page: 5
+      size: 10
+    P Test
+      .inject o
+      .exec()
+
   extend: ->
-    Pagnation Test
+    P Test
       .find()
       .select 'name a c' # exclude 'age'
       .page 1
@@ -43,7 +60,7 @@ TEST_CASES =
       .extend 'deepPopulate', ['a', 'c', 'c.b'], populate: 'c.b': select: 'name'
 
   populate: ->
-    Pagnation Test
+    P Test
       .find()
       .select 'name a c'
       .page 1
@@ -70,7 +87,6 @@ mongoose
            name: "Test#{i}", age: i, a: @a, c: c
         Test.create tests
       .then ->
-        # Promise test extend
         TEST_CASES.extend().exec()
           .then ({page, size, total, records, pages}) ->
             assert.equal page, 1
@@ -83,7 +99,6 @@ mongoose
             assert.equal typeof records[0].c.b, 'object'
             assert.equal records[0].c.b.age, undefined
       .then ->
-        # Promise test populate
         TEST_CASES.populate().exec()
           .then ({page, size, total, records, pages}) ->
             assert.equal page, 1
@@ -95,7 +110,6 @@ mongoose
             assert.equal typeof records[0].c, 'object'
             assert.equal records[0].a.age, undefined
       .then ->
-        # callback test extend
         TEST_CASES
           .extend()
           .exec (e, {page, size, total, records, pages}) ->
@@ -110,7 +124,6 @@ mongoose
             assert.equal typeof records[0].c.b, 'object'
             assert.equal records[0].c.b.age, undefined
       .then ->
-        # callback test populate
         TEST_CASES
           .populate()
           .exec (e, {page, size, total, records, pages}) ->
@@ -123,6 +136,21 @@ mongoose
             assert.equal typeof records[0].a, 'object'
             assert.equal typeof records[0].c, 'object'
             assert.equal records[0].a.age, undefined
+      .then ->
+        TEST_CASES
+          .config()
+        TEST_CASES
+          .simple()
+          .then (results) ->
+            assert.equal results.length == 8, true
+            assert.equal results.length > 0, true
+      .then ->
+        TEST_CASES
+          .inject()
+          .then (result) ->
+            assert.equal result.records.length == 10, true
+            assert.equal result.page == 5, true
+            assert.equal result.display.length == 3, true
       .then ->
          logger 'tests passed'
       .catch (e) ->

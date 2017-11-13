@@ -75,15 +75,53 @@ Pagnation(Foo)
   .then(function (result) {
 
   });
+/*
+  global config
+  options
+    size # per page size
+    display # page numbers
+    light # is simple page
+    size_name # inject() default size_name
+    page_name # inject() default page_name
+*/
+Pagnation(/*not pass params*/)
+  .config({
+    size: 10, // default 20
+    display: 5, // default 0
+    size_name: 'pageSize', // default 'size'
+    page_name: 'pageIndex', // default 'page'
+    light: true // default false
+  })
+/*
+  simple()
+*/
+Pagnation(User)
+  .page(1)
+  .size(10)
+  .simple(true)
+  .exec()
+  .then(function (results) {
+    // results is a result arrays without other info
+  })
+/*
+  inject()
+*/
+// if req.query is { page: 3, size: 8}
+Pagnation(User)
+  .inject(req.query)
+  .exec()
+  .then(function (result) {
+    // like page(3).size(8)
+  })
 ```
 
 # result
-- [page] current page
-- [pages] page count
-- [total] total records number
+- page current page
+- pages page count
+- total total records number
 - [records] current page records
-- [size] quantity per page
-- [display] the page number to display
+- size quantity per page
+- display the page number to display
 
 **sample**
 ``` json
@@ -117,6 +155,8 @@ Pagnation(Foo)
 - size(number)  quantity per page
 - display(number)  the page number to display
 - find select sort populate  same as mongoose
+- simple(boolean) light pagnation
+- inject(object) page().size() shorthand
 - exec(fn)
   - if fn is function then function(err, result) called
   - if fn is null then return a Promise

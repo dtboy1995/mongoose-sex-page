@@ -31,6 +31,7 @@ class Pagnation
     __size_name__: 'size'
     __page_name__: 'page'
     __light__: false
+    __infinite__: false
 
     config: (conf) ->
       Pagnation.__size__ = conf.size or 20
@@ -73,8 +74,12 @@ class Pagnation
       @count = o[Pagnation.__size_name__]
       @
 
-    exec: (fn)->
+    infinite: (no_limit) ->
+      @no_limit = no_limit
+      @
 
+    exec: (fn)->
+      @no_limit ?= Pagnation.__infinite__
       @index ?= 1
       @count ?= Pagnation.__size__
       @friend ?= Pagnation.__display__
@@ -85,10 +90,15 @@ class Pagnation
         .where @condition
         .count()
         .exec()
-      promiseRecords = @model
-        .find @condition
-        .skip skip
-        .limit +@count
+
+      if @no_limit
+        promiseRecords = @model
+          .find @condition
+      else
+        promiseRecords = @model
+          .find @condition
+          .skip skip
+          .limit +@count
 
       if @extends?
         for extend in @extends

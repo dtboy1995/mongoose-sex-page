@@ -1,7 +1,7 @@
 {
   "name": "mongoose-sex-page",
-  "version": "1.1.0",
-  "description": "A widget for mongoose paging",
+  "version": "1.2.0",
+  "description": "a api friendly mongoose pagination tool",
   "main": "index.js",
   "scripts": {
     "test": "npm run build && node test/test.js",

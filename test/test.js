@@ -59,10 +59,16 @@
   Test = mongoose.model('Test', TestSchema);
 
   TEST_CASES = {
+    infinite: function() {
+      return P(Test).infinite(true).exec();
+    },
     config: function() {
       return P().config({
         size: 8,
-        display: 3
+        display: 3,
+        size_name: 'size',
+        page_name: 'page',
+        light: false
       });
     },
     simple: function() {
@@ -203,6 +209,10 @@
         assert.equal(result.records.length === 10, true);
         assert.equal(result.page === 5, true);
         return assert.equal(result.display.length === 3, true);
+      });
+    }).then(function() {
+      return TEST_CASES.infinite().then(function(result) {
+        return assert.equal(result.records.length, 100);
       });
     }).then(function() {
       return logger('tests passed');

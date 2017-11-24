@@ -33,9 +33,19 @@ Test = mongoose.model 'Test', TestSchema
 
 TEST_CASES =
 
+  infinite: ->
+    P Test
+      .infinite true
+      .exec()
+
   config: ->
     P()
-      .config size: 8, display: 3
+      .config
+        size: 8
+        display: 3
+        size_name: 'size'
+        page_name: 'page'
+        light: false
 
   simple: ->
     P Test
@@ -151,6 +161,11 @@ mongoose
             assert.equal result.records.length == 10, true
             assert.equal result.page == 5, true
             assert.equal result.display.length == 3, true
+      .then ->
+        TEST_CASES
+          .infinite()
+          .then (result) ->
+            assert.equal result.records.length, 100
       .then ->
          logger 'tests passed'
       .catch (e) ->

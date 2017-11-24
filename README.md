@@ -89,7 +89,7 @@ P(User)
 // for the use of other api, please refer to test.js
 ```
 
-# Translations
+# translations
 [中文](README_CN.md)
 
 # test

@@ -90,7 +90,7 @@ P(User)
 // 其他api的使用，请参考test.js
 ```
 
-# Translations
+# translations
 [English](README.md)
 
 # 测试

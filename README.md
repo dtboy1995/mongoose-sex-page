@@ -86,6 +86,7 @@ P(User)
   .then(function () {
 
   })
+// for the use of other api, please refer to test.js
 ```
 
 # Translations

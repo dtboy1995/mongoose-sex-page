@@ -15,7 +15,7 @@ const P  = require('mongoose-sex-page')
 P(Foo)
   .page(1)
   .size(20)
-  .exec()
+  .exec() // return Promise
   .then(function (result) {
     // ...
   })
@@ -83,7 +83,7 @@ P().config({
 P(User)
   .inject(req.query)
   .exec()
-  .then(function () {
+  .then(function (result) {
 
   })
 // for the use of other api, please refer to test.js

@@ -70,8 +70,8 @@ class Pagnation
       @
 
     inject: (o) ->
-      @index = o[Pagnation.__page_name__]
-      @count = o[Pagnation.__size_name__]
+      @index = +o[Pagnation.__page_name__]
+      @count = +o[Pagnation.__size_name__]
       @
 
     infinite: (no_limit) ->

@@ -12,14 +12,39 @@ a api friendly mongoose pagination tool
 // ...
 const Foo = mongoose.model('Foo', FooSchema)
 const P  = require('mongoose-sex-page')
-
+```
+- simple
+```javascript
 P(Foo)
   .page(1)
   .size(20)
   .exec() // return Promise
   .then(function (result) {
     // ...
-  })
+})
+```
+- condition
+```javascript
+P(Foo)
+  .find({foo: foo})
+  .page(1)
+  .size(20)
+  .exec() // return Promise
+  .then(function (result) {
+    // ...
+})
+```
+
+# config
+
+```javascript
+P().config({
+  page_name: 'pageIndex',
+  size_name: 'pageSize',
+  size: 20,
+  display: 10,
+  light: true // just return [records]
+})
 ```
 
 # result
@@ -82,6 +107,7 @@ P().config({
 })
 // sample
 P(User)
+  .find({foo: foo})
   .inject(req.query)
   .exec()
   .then(function (result) {

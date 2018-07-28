@@ -3,6 +3,3 @@ node_js:
   - '6'
 services:
     mongodb
-notifications:
-  email:
-    on_success: never

@@ -1,4 +1,4 @@
-# ﻿![mongoose-sex-page](static/logo.gif)
+# ﻿![mongoose-sex-page](art/logo.gif)
 
 # mongoose-sex-page [![Build Status](https://travis-ci.org/dtboy1995/mongoose-sex-page.svg?branch=master)](https://travis-ci.org/dtboy1995/mongoose-sex-page)
 一个api友好的mongoose分页工具

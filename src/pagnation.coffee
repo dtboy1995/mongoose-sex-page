@@ -50,7 +50,7 @@ class Pagnation
     populate: (population...) ->
       @populations ?= []
       @populations.push population
-      @
+      return @
 
     sort: (@sorting) -> @
 

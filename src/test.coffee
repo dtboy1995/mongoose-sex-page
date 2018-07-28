@@ -81,7 +81,7 @@ TEST_CASES =
       .populate 'c'
 
 logger = (m) ->
-  console.log "[mongoose-sex-page]: #{m}"
+   console.log "[mongoose-sex-page]: #{m}"
 
 mongoose
   .connect 'mongodb://localhost/pagnation', useMongoClient: true

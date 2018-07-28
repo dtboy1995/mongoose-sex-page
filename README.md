@@ -1,38 +1,44 @@
-# ﻿![mongoose-sex-page](static/logo.gif)
+# ﻿![mongoose-sex-page](art/logo.gif)
 
 # mongoose-sex-page [![Build Status](https://img.shields.io/travis/dtboy1995/mongoose-sex-page/master.svg)](https://travis-ci.org/dtboy1995/mongoose-sex-page)
 
-a api friendly mongoose pagination tool
+:coffee: a api friendly mongoose pagination tool
 
 # install
 > npm install --save mongoose-sex-page
 
 # usage
+
 ```javascript
-// ...
 const Foo = mongoose.model('Foo', FooSchema)
 const P  = require('mongoose-sex-page')
 ```
-- simple
+
+### simple
+
 ```javascript
 P(Foo)
   .page(1)
   .size(20)
-  .exec() // return Promise
+  .exec() // Promise
   .then(function (result) {
-    // ...
-})
+
+  })
 ```
-- condition
+
+### complex
+
 ```javascript
 P(Foo)
   .find({foo: foo})
   .page(1)
   .size(20)
-  .exec() // return Promise
+  .display(8)
+  .simple(true)
+  .exec() // Promise
   .then(function (result) {
-    // ...
-})
+
+  })
 ```
 
 # config
@@ -43,18 +49,11 @@ P().config({
   size_name: 'pageSize',
   size: 20,
   display: 10,
-  light: true // just return [records]
+  light: true // just return records
 })
 ```
 
 # result
-- `page` current page
-- `pages` page count
-- `total` total records number
-- `[records]` current page records
-- `size` quantity per page
-- `display` the page number to display
-
 ``` json
 {
   "page": 1,
@@ -81,21 +80,6 @@ P().config({
 }
 ```
 
-# api
-- page(number)  current page
-- size(number)  quantity per page
-- display(number)  the page number to display
-- infinite(boolean) is non paging
-- find select sort populate  same as mongoose methods
-- simple(boolean) light pagnation
-- inject(object) page().size() shorthand
-- exec(fn)
-  - if fn is function then function(err, result) called
-  - if fn is null then return a Promise
-- extend(name, params...)
-  - name a method name for Model
-  - params Arguments to pass to this method, you can pass more than one parameter
-
 # best practice
 ```javascript
 // if your client's query parameter is pageSize=20&pageIndex=1 like this, and the number of pages per business is fixed to 20
@@ -115,9 +99,6 @@ P(User)
   })
 // for the use of other api, please refer to test.js
 ```
-
-# translations
-[中文](README_CN.md)
 
 # test
 > npm test

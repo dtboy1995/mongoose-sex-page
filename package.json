@@ -15,7 +15,8 @@
     "mongoose",
     "page",
     "pagnation",
-    "paging"
+    "paging",
+    "sex"
   ],
   "author": "dtboy",
   "license": "MIT",

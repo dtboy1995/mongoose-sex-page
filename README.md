@@ -2,7 +2,7 @@
 
 # mongoose-sex-page [![Build Status](https://img.shields.io/travis/dtboy1995/mongoose-sex-page/master.svg)](https://travis-ci.org/dtboy1995/mongoose-sex-page)
 
-:coffee: a api friendly mongoose pagination tool
+:sunrise: a api friendly mongoose pagination tool
 
 # install
 > npm install --save mongoose-sex-page

@@ -5,7 +5,9 @@
 :sunrise: a api friendly mongoose pagination tool
 
 # install
-> npm install --save mongoose-sex-page
+```
+npm install --save mongoose-sex-page
+```
 
 # usage
 
@@ -14,46 +16,66 @@ const Foo = mongoose.model('Foo', FooSchema)
 const P  = require('mongoose-sex-page')
 ```
 
-### simple
+- ### simple
 
 ```javascript
-P(Foo)
+P(Dummy)
   .page(1)
   .size(20)
-  .exec() // Promise
-  .then(function (result) {
+  .exec()
+  .then((result) => {
 
   })
 ```
 
-### complex
+- ### complex
 
 ```javascript
-P(Foo)
-  .find({foo: foo})
+P(Dummy)
+  .find({dummy: dummy})
   .page(1)
   .size(20)
   .display(8)
   .simple(true)
-  .exec() // Promise
-  .then(function (result) {
+  .exec()
+  .then((result) => {
 
   })
 ```
 
-# config
+- ### config
 
 ```javascript
 P().config({
-  page_name: 'pageIndex',
-  size_name: 'pageSize',
+  page_name: 'page',
+  size_name: 'size',
   size: 20,
   display: 10,
-  light: true // just return records
+  // only return records
+  light: true
 })
 ```
 
-# result
+- ### convenient
+
+```javascript
+// for such a request /users?size=20&page=1 /news?size=20&page=1
+P().config({
+  page_name: 'page',
+  size_name: 'size',
+  size: 20
+})
+// then
+P(Dummy)
+  .find({dummy: dummy})
+  .inject(req.query)
+  .exec()
+  .then((result) => {
+
+  })
+```
+
+# result sample
 ``` json
 {
   "page": 1,
@@ -78,26 +100,6 @@ P().config({
   "pages": 20,
   "display": [1, 2, 3, 4, 5, 6]
 }
-```
-
-# best practice
-```javascript
-// if your client's query parameter is pageSize=20&pageIndex=1 like this, and the number of pages per business is fixed to 20
-// configure only once
-P().config({
-  page_name: 'pageIndex',
-  size_name: 'pageSize',
-  size: 20
-})
-// sample
-P(User)
-  .find({foo: foo})
-  .inject(req.query)
-  .exec()
-  .then(function (result) {
-
-  })
-// for the use of other api, please refer to test.js
 ```
 
 # test

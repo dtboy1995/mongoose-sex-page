@@ -12,7 +12,7 @@ npm install --save mongoose-sex-page
 # usage
 
 ```javascript
-const Foo = mongoose.model('Foo', FooSchema)
+const Dummy = mongoose.model('Dummy', DummySchema)
 const P  = require('mongoose-sex-page')
 ```
 

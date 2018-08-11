@@ -2,7 +2,7 @@
 
 # mongoose-sex-page [![Build Status](https://img.shields.io/travis/dtboy1995/mongoose-sex-page/master.svg)](https://travis-ci.org/dtboy1995/mongoose-sex-page)
 
-:sunrise: api友好的mongoose分页小工具
+:fire: api友好的mongoose分页小工具
 
 # 安装
 ```

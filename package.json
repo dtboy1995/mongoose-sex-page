@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "coffee-script": "^1.12.7",
-    "mongoose": "^4.11.4",
+    "mongoose": "^5.8.7",
     "mongoose-deep-populate": "^3.0.0"
   }
 }
